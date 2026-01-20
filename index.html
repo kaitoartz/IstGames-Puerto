@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desbloquea el Camino Seguro - Misión Trabajo Seguro</title>
+    <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="logos/ist.ico">
+</head>
+
+<body>
+
+    <header class="game-header">
+        <div class="logo-container">
+            <a href="logos/" class="logo-link">
+                <img src="logos/logo-shield.png" alt="Misión Trabajo Seguro" class="logo" loading="lazy">
+            </a>
+        </div>
+        <h1>Desbloquea el Camino Seguro</h1>
+        <div class="logo-container">
+            <a href="logos/" class="logo-link">
+                <img src="logos/logo-ist.png" alt="IST" class="logo" loading="lazy">
+            </a>
+            </a>
+        </div>
+        <button id="mute-btn" class="mute-btn">🔊</button>
+        <div id="timer-container" style="grid-column: 1 / -1; text-align: center; margin-top: 10px; font-weight: bold; font-size: 1.2rem;">
+            ⏱️ Tiempo: <span id="game-timer">00:00</span>
+        </div>
+    </header>
+
+    <main class="game-container">
+        <div class="canvas-wrapper">
+            <div id="start-label" class="label left">Partida <a href="#" class="arrow-link"><span class="arrow">➜</span></a></div>
+            <div id="end-label" class="label right">Llegada <a href="#" class="arrow-link"><span class="arrow">➜</span></a></div>
+
+            <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+            <!-- On-screen Controls: Now inside wrapper for positioning context if needed, or kept outside? 
+             Waiting... The CSS change assumes controls are absolute to WRAPPER? 
+             Actually my CSS applied absolute left:100% which implies being relative to wrapper. 
+             So I MUST move controls inside canvas-wrapper for that specific CSS to work best 
+             OR make game-container relative (it is) and controls absolute? 
+             If controls are absolute in game-container, hard to pin to canvas right side if canvas width varies.
+             SAFEST: Inside canvas-wrapper. -->
+
+            <div id="game-overlay" class="hidden">
+                <div class="message-box">
+                    <h2 id="overlay-title">¡Juego Terminado!</h2>
+                    <p id="overlay-message">Inténtalo de nuevo.</p>
+                    <div class="button-group"
+                        style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
+                        <button id="restart-btn">Reiniciar</button>
+                        <button id="next-level-btn" class="hidden"
+                            style="background-color: var(--primary-purple); color: white;">Siguiente Nivel ➜</button>
+                    </div>
+                    <p class="safety-tip" id="safety-tip"></p>
+                </div>
+            </div>
+
+            <div class="controls-container">
+                <button class="dpad-btn up" id="btn-up">⬆️</button>
+                <button class="dpad-btn left" id="btn-left">⬅️</button>
+                <button class="dpad-btn down" id="btn-down">⬇️</button>
+                <button class="dpad-btn right" id="btn-right">➡️</button>
+                <p class="controls-hint">Usa las flechas o el "WASD" del teclado para moverte.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="instructions">
+        <h3>INSTRUCCIÓN PARA LOS PARTICIPANTES</h3>
+        <ul>
+            <li><span class="bullet"></span> Observa con atención el laberinto.</li>
+            <li><span class="bullet"></span> Tu desafío es llegar a la salida sin cruzar por zonas de riesgo ni pasar
+                frente a equipos en movimiento.</li>
+            <li><span class="bullet"></span> Piensa antes de avanzar: la mejor ruta no siempre es la más rápida, sino
+                la más segura.</li>
+        </ul>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+</body>
+
+</html>
