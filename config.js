@@ -145,7 +145,7 @@ MAP: [
 
         },
         // Nivel 2: Un poco más difícil
-        {
+        /*{
             NAME: "Nivel 2: Operaciones Nocturnas",
             MAP: [
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -165,6 +165,6 @@ MAP: [
                 { x: 10, y: 5, type: 'truck', dx: 0, dy: 1, minY: 5, maxY: 9 },
                 { x: 14, y: 3, type: 'forklift', dx: 1, dy: 0, minX: 13, maxX: 16 }
             ]
-        }
+        }*/
     ]
 };
