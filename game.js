@@ -300,13 +300,27 @@ function render() {
 function drawPlayer(ctx, x, y) {
     const cx = x * TILE_SIZE;
     const cy = y * TILE_SIZE;
-    const img = Assets.get('PLAYER');
-    if (img && img.complete && img.naturalWidth !== 0) {
-        ctx.drawImage(img, cx, cy, TILE_SIZE, TILE_SIZE);
-        return;
-    }
     const center_x = x * TILE_SIZE + TILE_SIZE / 2;
     const center_y = y * TILE_SIZE + TILE_SIZE / 2;
+    
+    // Determinar ángulo de rotación según dirección
+    let rotation = 0;
+    if (player.dir === 'right') rotation = 0;
+    else if (player.dir === 'down') rotation = Math.PI / 2;
+    else if (player.dir === 'left') rotation = Math.PI;
+    else if (player.dir === 'up') rotation = -Math.PI / 2;
+    
+    const img = Assets.get('PLAYER');
+    if (img && img.complete && img.naturalWidth !== 0) {
+        ctx.save();
+        ctx.translate(center_x, center_y);
+        ctx.rotate(rotation);
+        ctx.drawImage(img, -TILE_SIZE / 2, -TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+        ctx.restore();
+        return;
+    }
+    
+    // Fallback: círculo con indicador de dirección
     const r = TILE_SIZE / 3;
     ctx.fillStyle = C.PLAYER.COLOR_BODY;
     ctx.beginPath();
@@ -316,6 +330,19 @@ function drawPlayer(ctx, x, y) {
     ctx.beginPath();
     ctx.arc(center_x, center_y - 2, r, Math.PI, 0);
     ctx.fill();
+    
+    // Flecha de dirección
+    ctx.save();
+    ctx.translate(center_x, center_y);
+    ctx.rotate(rotation);
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.moveTo(r * 0.5, 0);
+    ctx.lineTo(-r * 0.2, -r * 0.3);
+    ctx.lineTo(-r * 0.2, r * 0.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 }
 
 function drawEnemy(ctx, enemy) {
@@ -588,6 +615,12 @@ function tryMove(dx, dy) {
         AudioSys.playBumper();
         return;
     }
+
+    // Actualizar dirección del jugador
+    if (dx > 0) player.dir = 'right';
+    else if (dx < 0) player.dir = 'left';
+    else if (dy > 0) player.dir = 'down';
+    else if (dy < 0) player.dir = 'up';
 
     player.x = newX;
     player.y = newY;

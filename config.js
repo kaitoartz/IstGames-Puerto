@@ -11,7 +11,7 @@ const CONFIG = {
     // Si defines una URL aquí, el juego intentará cargar la imagen.
     // Si la dejas en null o bloqueas la carga, usará los colores definidos abajo.
     SPRITES: {
-        PLAYER: null,     // Ej: 'assets/player.png' (Aún no disponible)
+        PLAYER: 'sprites/player.png',
         FORKLIFT: 'sprites/forklift.png',
         TRUCK: 'sprites/truck.png',
         WALLS: [
@@ -119,10 +119,10 @@ const CONFIG = {
 NAME: "Nivel 1: Almacén e Industrias",
 MAP: [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [2, 0, 0, 7, 0, 0, 0, 1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1, 1],
-    [1, 1, 0, 1, 6, 1, 0, 1, 0, 1, 1, 0, 4, 0, 1, 0, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
-    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 3],
+    [2, 0, 0, 7, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 1, 1],
+    [1, 1, 0, 1, 6, 1, 0, 1, 1, 1, 1, 0, 1, 0, 7, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 4, 0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 7, 1, 0, 1, 1, 1, 0, 1, 0, 0, 3],
     [1, 0, 0, 4, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1],
     [1, 1, 0, 1, 1, 0, 7, 0, 1, 1, 1, 4, 1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1],
@@ -134,10 +134,11 @@ MAP: [
 
 
             ENEMIES: [
-    { x: 10, y: 1, type: 'forklift', dx: 1, dy: 0, minX: 10, maxX: 13 }, // obstaculiza camino corto
+    { x: 10, y: 1, type: 'forklift', dx: 0.5, dy: 0, minX: 7, maxX: 13 }, // obstaculiza camino corto
     { x: 5 , y: 5, type: 'truck', dx: 0, dy: 1, minY: 5, maxY: 9 },     // cruza verticalmente
-    { x: 5, y: 5, type: 'forklift', dx: 1, dy: 0, minX: 3, maxX: 8 },    // interfiere si el jugador duda
-    { x: 11, y: 6, type: 'truck', dx: 0, dy: 1, minY: 0, maxY: 6 }      // cerca del final peligroso (vertical)
+    { x: 5, y: 5, type: 'forklift', dx: 0.5, dy: 0, minX: 3, maxX: 8 },    // interfiere si el jugador duda
+    { x: 11, y: 6, type: 'truck', dx: 0, dy: 1, minY: 0, maxY: 6 },
+    { x: 15, y: 1, type: 'truck', dx: 0, dy: 1, minY: 0, maxY: 6 }      // cerca del final peligroso (vertical)
 ]
 
 
