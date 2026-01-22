@@ -21,7 +21,8 @@ const CONFIG = {
         ],
         FLOOR: 'sprites/floor.jpg',
         GOAL: null,       // Ej: 'assets/meta.png'
-        STOP_SIGN: 'sprites/sign-stop.png' // Nuevo asset
+        STOP_SIGN: 'sprites/sign-stop.png', // Nuevo asset
+        BOX: 'sprites/box.png'    // Caja como obstáculo
     },
 
     // 2. CONFIGURACIÓN DE COLORES Y ASSETS
@@ -31,7 +32,8 @@ const CONFIG = {
         PATH: 'white',        // Color del camino
         START_TEXT: '#4a1a5e',// Color flecha inicio
         END_ZONE: '#cf4286',  // Color zona meta
-        HAZARD_SIGN: '#d32f2f'// Fallback color
+        HAZARD_SIGN: '#d32f2f',// Fallback color PARE (rojo)
+        WARNING_SIGN: '#FFC107'// Fallback color advertencia (amarillo)
     },
 
     // 3. JUGADOR (EL TRABAJADOR)
@@ -60,7 +62,12 @@ const CONFIG = {
         LEVEL_COMPLETED_TITLE: "¡Nivel Superado!",
         LEVEL_COMPLETED_MSG: "Has completado esta zona de forma segura. ¿Listo para el siguiente desafío?",
         TIP_WIN: "Recuerda: La seguridad es tarea de todos. ¡Sigue así!",
-        TIP_LOSE: "Consejo: Mantente alerta a la señalización y maquinaria en tu entorno."
+        TIP_LOSE: "Consejo: Mantente alerta a la señalización y los equipos en tu entorno.",
+        
+        // Mensajes de Señales
+        SIGN_SAFE: "¡Buen trabajo! Este camino es más largo, pero mucho más seguro.",
+        SIGN_STOP: "⚠️ PARE: Zona de precaución. Mantente alerta y procede con cuidado.",
+        SIGN_WARNING: "⚠️ PELIGRO: Tráfico intenso y obstáculos. ¿Seguro que quieres pasar por aquí?"
     },
 
     // 6. AJUSTES GENERALES
@@ -102,27 +109,39 @@ const CONFIG = {
     // 10. NIVELES DEL JUEGO
     LEVELS: [
         {
-            NAME: "Nivel 1: Almacén e Industrias",
-            MAP: [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [2, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1],
-                [1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1],
-                [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
-                [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 3],
-                [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1],
-                [1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-                [1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1],
-                [1, 1, 1, 1, 1, 4, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            ],
+            NAME: "Nivel 1: La Decisión Segura",
+            // 0: Camino, 1: Pared, 2: Inicio, 3: Meta, 4: Peligro, 5: Señal
+            // Final Polish of the Map Matrix for the User Request:
+            // Left Path: Cols 1-3, goes down, loops bottom. Safe.
+            // Right Path: Cols 10-15. Direct to goal. Hazards (4). Enemies.
+           NAME: "Nivel 1: La Decisión Segura",
+// 0: Camino, 1: Pared, 2: Inicio, 3: Meta, 4: Peligro, 5: Señal
+NAME: "Nivel 1: Almacén e Industrias",
+MAP: [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [2, 0, 0, 7, 0, 0, 0, 1, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 1, 1],
+    [1, 1, 0, 1, 6, 1, 0, 1, 0, 1, 1, 0, 4, 0, 1, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 3],
+    [1, 0, 0, 4, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1],
+    [1, 1, 0, 1, 1, 0, 7, 0, 1, 1, 1, 4, 1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 5, 1, 1, 7, 1, 1, 1, 0, 1, 0, 0, 0, 1, 5, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+],
+
+
             ENEMIES: [
-                { x: 8, y: 1, type: 'forklift', dx: 1, dy: 0, minX: 8, maxX: 12 },
-                { x: 12, y: 3, type: 'truck', dx: -1, dy: 0, minX: 8, maxX: 12 },
-                { x: 5, y: 9, type: 'forklift', dx: 1, dy: 0, minX: 2, maxX: 8 },
-                { x: 15, y: 8, type: 'truck', dx: 1, dy: 0, minY: 8, maxY: 10 }
-            ]
+    { x: 10, y: 1, type: 'forklift', dx: 1, dy: 0, minX: 10, maxX: 13 }, // obstaculiza camino corto
+    { x: 5 , y: 5, type: 'truck', dx: 0, dy: 1, minY: 5, maxY: 9 },     // cruza verticalmente
+    { x: 5, y: 5, type: 'forklift', dx: 1, dy: 0, minX: 3, maxX: 8 },    // interfiere si el jugador duda
+    { x: 11, y: 6, type: 'truck', dx: 0, dy: 1, minY: 0, maxY: 6 }      // cerca del final peligroso (vertical)
+]
+
+
+
         },
         // Nivel 2: Un poco más difícil
         {
@@ -142,7 +161,7 @@ const CONFIG = {
             ],
             ENEMIES: [
                 { x: 3, y: 1, type: 'forklift', dx: 1, dy: 0, minX: 3, maxX: 10 },
-                { x: 10, y: 5, type: 'truck', dx: -1, dy: 0, minX: 2, maxX: 18 },
+                { x: 10, y: 5, type: 'truck', dx: 0, dy: 1, minY: 5, maxY: 9 },
                 { x: 14, y: 3, type: 'forklift', dx: 1, dy: 0, minX: 13, maxX: 16 }
             ]
         }

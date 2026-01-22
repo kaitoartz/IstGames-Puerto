@@ -325,6 +325,159 @@ canvas {
     animation-iteration-count: 1;
 }
 
+/* Intro Popup Styles */
+.intro-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.intro-popup.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.intro-popup.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.intro-content {
+    background: linear-gradient(135deg, #4a1a5e 0%, #6b2d7a 100%);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+}
+
+.intro-header {
+    margin-bottom: 25px;
+}
+
+.intro-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.intro-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.intro-subtitle {
+    font-size: 1rem;
+    color: #f4c430;
+    font-weight: 600;
+}
+
+.intro-legend {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.intro-legend h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: #f4c430;
+}
+
+.legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    text-align: left;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.player-icon {
+    background: linear-gradient(135deg, purple, #8b4789);
+    border: 2px solid #ffcc00;
+}
+
+.goal-icon {
+    background: linear-gradient(135deg, #cf4286, #ff5a9e);
+}
+
+.enemy-icon {
+    background: rgba(255, 153, 0, 0.2);
+}
+
+.sign-icon {
+    background: rgba(255, 193, 7, 0.2);
+}
+
+.legend-text {
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.intro-instructions {
+    margin: 20px 0;
+    text-align: left;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.intro-instructions p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, #cf4286, #ff5a9e);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(207, 66, 134, 0.4);
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(207, 66, 134, 0.6);
+}
+
+.start-btn:active {
+    transform: translateY(0);
+}
+
 /* Fade In Overlay */
 #game-overlay {
     transition: opacity 0.5s ease-in-out;

@@ -38,6 +38,46 @@
 
             <canvas id="gameCanvas" width="800" height="500"></canvas>
 
+            <!-- Intro Popup -->
+            <div id="intro-popup" class="intro-popup visible">
+                <div class="intro-content">
+                    <div class="intro-header">
+                        <img src="logos/logo-ist.png" alt="IST" class="intro-logo">
+                        <h2>Bienvenido a la Misión</h2>
+                        <p class="intro-subtitle">Desbloquea el Camino Seguro</p>
+                    </div>
+                    
+                    <div class="intro-legend">
+                        <h3>Guía de Elementos</h3>
+                        <div class="legend-grid">
+                            <div class="legend-item">
+                                <span class="legend-icon player-icon"></span>
+                                <span class="legend-text"><strong>Trabajador:</strong> Tú</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-icon goal-icon"></span>
+                                <span class="legend-text"><strong>Meta:</strong> Llegada segura</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-icon enemy-icon">🚜</span>
+                                <span class="legend-text"><strong>Equipos:</strong> ¡Evítalos!</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-icon sign-icon">⚠️</span>
+                                <span class="legend-text"><strong>Señales:</strong> Lee los avisos</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="intro-instructions">
+                        <p>🎯 <strong>Objetivo:</strong> Llega a la meta evitando equipos en movimiento</p>
+                        <p>⌨️ <strong>Controles:</strong> Usa las flechas del teclado o los botones en pantalla</p>
+                    </div>
+                    
+                    <button id="start-game-btn" class="start-btn">🚀 Iniciar Misión</button>
+                </div>
+            </div>
+
             <!-- On-screen Controls: Now inside wrapper for positioning context if needed, or kept outside? 
              Waiting... The CSS change assumes controls are absolute to WRAPPER? 
              Actually my CSS applied absolute left:100% which implies being relative to wrapper. 

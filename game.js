@@ -326,11 +326,46 @@ function drawEnemy(ctx, enemy) {
 
     if (img && img.complete && img.naturalWidth !== 0) {
         ctx.save();
-        if (enemy.dx < 0) {
+        
+        // Tamaño extendido para sprites (sobresalen del tile)
+        let spriteWidth = TILE_SIZE;
+        let spriteHeight = TILE_SIZE;
+        let offsetX = 0;
+        let offsetY = 0;
+        
+        if (enemy.type === 'truck') {
+            // Camiones verticales son más largos
+            if (enemy.dy !== 0) {
+                spriteHeight = TILE_SIZE * 1.5;
+                offsetY = -TILE_SIZE * 0.25; // Centrar verticalmente
+            } else {
+                // Camiones horizontales son más anchos
+                spriteWidth = TILE_SIZE * 1.5;
+                offsetX = -TILE_SIZE * 0.25; // Centrar horizontalmente
+            }
+        } else if (enemy.type === 'forklift') {
+            // Montacargas un poco más grande
+            spriteWidth = TILE_SIZE * 1.2;
+            spriteHeight = TILE_SIZE * 1.2;
+            offsetX = -TILE_SIZE * 0.1;
+            offsetY = -TILE_SIZE * 0.1;
+        }
+        
+        // Manejo de volteo horizontal y vertical
+        let flipH = enemy.dx < 0;
+        let flipV = enemy.dy < 0;
+        
+        if (flipH && flipV) {
+            ctx.scale(-1, -1);
+            ctx.drawImage(img, -x - spriteWidth - offsetX, -y - spriteHeight - offsetY, spriteWidth, spriteHeight);
+        } else if (flipH) {
             ctx.scale(-1, 1);
-            ctx.drawImage(img, -x - TILE_SIZE, y, TILE_SIZE, TILE_SIZE);
+            ctx.drawImage(img, -x - spriteWidth - offsetX, y + offsetY, spriteWidth, spriteHeight);
+        } else if (flipV) {
+            ctx.scale(1, -1);
+            ctx.drawImage(img, x + offsetX, -y - spriteHeight - offsetY, spriteWidth, spriteHeight);
         } else {
-            ctx.drawImage(img, x, y, TILE_SIZE, TILE_SIZE);
+            ctx.drawImage(img, x + offsetX, y + offsetY, spriteWidth, spriteHeight);
         }
         ctx.restore();
         return;
@@ -410,6 +445,51 @@ function drawTile(ctx, type, c, r) {
                 ctx.fillText('PARE', cx, cy + 3);
             }
         }
+        if (type === 5) {
+            // INFO SIGN
+            ctx.fillStyle = '#2196F3'; // Blue
+            ctx.beginPath();
+            const cx = x + TILE_SIZE / 2;
+            const cy = y + TILE_SIZE / 2;
+            ctx.arc(cx, cy, TILE_SIZE / 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('i', cx, cy + 5);
+        }
+        if (type === 6) {
+            // WARNING SIGN (Yellow)
+            ctx.fillStyle = C.COLORS.WARNING_SIGN || '#FFC107'; // Yellow
+            ctx.beginPath();
+            const cx = x + TILE_SIZE / 2;
+            const cy = y + TILE_SIZE / 2 - 3;
+            const size = TILE_SIZE / 3;
+            // Draw triangle
+            ctx.moveTo(cx, cy - size);
+            ctx.lineTo(cx + size, cy + size);
+            ctx.lineTo(cx - size, cy + size);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = 'black';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('!', cx, cy + size / 2);
+        }
+        if (type === 7) {
+            // BOX (Caja como obstáculo)
+            const boxImg = Assets.get('BOX');
+            if (boxImg && boxImg.complete && boxImg.naturalWidth !== 0) {
+                ctx.drawImage(boxImg, x, y, TILE_SIZE, TILE_SIZE);
+            } else {
+                // Fallback: dibujar cuadrado marrón
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+                ctx.strokeStyle = '#654321';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+            }
+        }
     }
 }
 
@@ -442,10 +522,60 @@ function updateEnemies(timestamp) {
             }
         });
         checkCollisions();
+        checkProximity(); // New Proximity Check
         lastTime = timestamp;
         render();
     }
     animationFrameId = requestAnimationFrame(updateEnemies);
+}
+
+// Proximity Warning System
+function checkProximity() {
+    if (!gameActive) return;
+    let danger = false;
+    enemies.forEach(enemy => {
+        const dist = Math.abs(enemy.x - player.x) + Math.abs(enemy.y - player.y);
+        if (dist <= 2) { // Warning radius
+            danger = true;
+        }
+    });
+
+    const wrapper = document.querySelector('.canvas-wrapper');
+    if (danger) {
+        wrapper.classList.add('danger-glow');
+        if (Math.random() > 0.9) AudioSys.playTone(400, 'sine', 0.1, 0.05); // Subtle beep
+    } else {
+        wrapper.classList.remove('danger-glow');
+    }
+}
+
+function showToast(message) {
+    let toast = document.getElementById('game-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'game-toast';
+        toast.style.position = 'absolute';
+        toast.style.top = '10%';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.background = 'rgba(0, 0, 0, 0.8)';
+        toast.style.color = 'white';
+        toast.style.padding = '10px 20px';
+        toast.style.borderRadius = '5px';
+        toast.style.zIndex = '1000';
+        toast.style.transition = 'opacity 0.5s';
+        toast.style.pointerEvents = 'none';
+        toast.style.textAlign = 'center';
+        document.body.appendChild(toast);
+    }
+    toast.innerText = message;
+    toast.style.opacity = '1';
+    
+    // Auto hide after 3 seconds
+    if (toast.timeout) clearTimeout(toast.timeout);
+    toast.timeout = setTimeout(() => {
+        toast.style.opacity = '0';
+    }, 4000);
 }
 
 function tryMove(dx, dy) {
@@ -454,7 +584,7 @@ function tryMove(dx, dy) {
     const newY = player.y + dy;
 
     if (newX < 0 || newX >= mapLayout[0].length || newY < 0 || newY >= mapLayout.length) return;
-    if (mapLayout[newY][newX] === 1) {
+    if (mapLayout[newY][newX] === 1 || mapLayout[newY][newX] === 7) {
         AudioSys.playBumper();
         return;
     }
@@ -467,10 +597,17 @@ function tryMove(dx, dy) {
 }
 
 function checkCollisions() {
-    // Hazards
+    // Stop Sign Warning (Type 4)
     if (mapLayout[player.y][player.x] === 4) {
-        gameOver(false, C.TEXTS.GAME_OVER_MSG_HAZARD);
-        return;
+        showToast(C.TEXTS.SIGN_STOP || "⚠️ PARE: Zona de precaución. Procede con cuidado.");
+    }
+    // Info Signs (Type 5)
+    if (mapLayout[player.y][player.x] === 5) {
+            showToast(C.TEXTS.SIGN_SAFE);
+    }
+    // Yellow Warning Sign (Type 6)
+    if (mapLayout[player.y][player.x] === 6) {
+        showToast(C.TEXTS.SIGN_WARNING || "⚠️ ADVERTENCIA: ¿Seguro que quieres pasar por aquí?");
     }
     // Enemies
     for (let enemy of enemies) {
@@ -646,9 +783,33 @@ function startGame() {
     window.addEventListener('click', () => AudioSys.init(), { once: true });
 }
 
+// Intro Popup Handler
+function showIntroPopup() {
+    const popup = document.getElementById('intro-popup');
+    const startBtn = document.getElementById('start-game-btn');
+    
+    if (popup && startBtn) {
+        popup.classList.add('visible');
+        popup.classList.remove('hidden');
+        
+        const handleStart = () => {
+            AudioSys.init();
+            popup.classList.remove('visible');
+            popup.classList.add('hidden');
+            startGame();
+        };
+        
+        startBtn.addEventListener('click', handleStart);
+        startBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleStart();
+        });
+    }
+}
+
 // Make sure DOM is loaded before starting
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startGame);
+    document.addEventListener('DOMContentLoaded', showIntroPopup);
 } else {
-    startGame();
+    showIntroPopup();
 }
